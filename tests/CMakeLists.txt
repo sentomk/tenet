@@ -17,6 +17,7 @@ include(GoogleTest)
 
 add_executable(tenet_tests
     smoke_test.cpp
+    scope_test.cpp
 )
 
 target_link_libraries(tenet_tests PRIVATE

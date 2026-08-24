@@ -64,8 +64,9 @@ TEST(ScopeFailTest, MoveTransfersOwnership) {
     EXPECT_TRUE(ran);
 }
 
-// Compile-time contract checks shared by the scope family.
-static_assert(!std::is_copy_constructible_v<tenet::scope_fail<int*>>);
+// Compile-time contract checks shared by the scope family. Note: these
+// instantiate the class template, so F must satisfy its requirements too.
+static_assert(!std::is_copy_constructible_v<tenet::scope_fail<void (*)()>>);
 static_assert(
     std::is_nothrow_move_constructible_v<tenet::scope_fail<bool (*)()>>);
 

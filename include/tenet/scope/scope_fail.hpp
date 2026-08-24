@@ -3,6 +3,8 @@
 // tenet::scope_fail -- see the class comment below.
 
 #include <exception>
+#include "tenet/concepts.hpp"
+
 #include <type_traits>
 #include <utility>
 
@@ -30,6 +32,13 @@ namespace tenet {
 // an escaping exception would call std::terminate.
 template <typename F>
 class scope_fail {
+  // Friendly misuse diagnostics -- see tenet::scope_exit for rationale.
+  static_assert(ScopeGuardAction<F>,
+                "tenet::scope_fail<F>: F must be a move-constructible "
+                "callable invocable with no arguments, e.g. a nullary lambda "
+                "'[&] { ... }' or 'void (*)()'. The guard stores the callable "
+                "by value and its destructor calls it without arguments.");
+
 public:
   // Takes ownership of f and arms the guard. On a throwing move into the
   // member (which would leave the guard unable to exist), the action runs

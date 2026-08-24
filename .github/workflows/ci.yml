@@ -18,6 +18,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check include style
+        shell: bash
+        run: |
+          # Project and third-party headers must use quoted includes;
+          # only standard library headers may use angle brackets.
+          offenders=$(grep -rEn --include='*.hpp' --include='*.cpp' \
+            '^[[:space:]]*#[[:space:]]*include[[:space:]]*<(tenet|gtest)/' \
+            include src tests || true)
+          if [ -n "$offenders" ]; then
+            echo "Angle-bracket includes found for project/third-party headers:"
+            echo "$offenders"
+            exit 1
+          fi
+
       - name: Configure
         run: >
           cmake -S . -B build

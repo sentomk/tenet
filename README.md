@@ -32,6 +32,19 @@ cmake --build build -j
 ctest --test-dir build --output-on-failure
 ```
 
+## Style
+
+Include style (enforced by CI):
+
+```cpp
+#include <type_traits>      // standard library: angle brackets
+#include "tenet/tenet.hpp"  // project headers: quotes
+#include "gtest/gtest.h"    // third-party headers: quotes
+```
+
+Note that clang-format cannot rewrite quote styles; the CI check is the
+authority here.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

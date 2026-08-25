@@ -2,10 +2,10 @@
 
 // tenet::scope_exit -- see the class comment below.
 
-#include "tenet/concepts/scope_concepts.hpp"
-
 #include <type_traits>
 #include <utility>
+
+#include "tenet/concepts/scope_concepts.hpp"
 
 namespace tenet {
 
@@ -51,12 +51,11 @@ public:
   // the guard cannot exist -- so the action is invoked immediately in the
   // handler and the exception propagates: the cleanup still happens exactly
   // once, matching std::experimental::scope_exit.
-  explicit scope_exit(F f) noexcept(std::is_nothrow_move_constructible_v<F>)
-      try : fn_(std::move(f)) {
+  explicit scope_exit(F f) noexcept(std::is_nothrow_move_constructible_v<F>) try
+      : fn_(std::move(f)) {
   } catch (...) {
     f();
   }
-
 
   // Transfers the pending action from another guard. The source guard becomes
   // disarmed (its action will never fire), mirroring release().
@@ -65,8 +64,7 @@ public:
   // capturing by reference/value of movable types; otherwise an exception
   // during the move could leave both guards armed and run the action twice,
   // so we conservatively propagate the exception before disarming anything.
-  scope_exit(scope_exit&& other) noexcept(
-      std::is_nothrow_move_constructible_v<F>)
+  scope_exit(scope_exit&& other) noexcept(std::is_nothrow_move_constructible_v<F>)
       : fn_(std::move(other.fn_)), active_(std::exchange(other.active_, false)) {}
 
   // Copying would allow the same cleanup to run on two guards' exits.

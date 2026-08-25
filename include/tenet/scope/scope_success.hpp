@@ -3,10 +3,10 @@
 // tenet::scope_success -- see the class comment below.
 
 #include <exception>
-#include "tenet/concepts/scope_concepts.hpp"
-
 #include <type_traits>
 #include <utility>
+
+#include "tenet/concepts/scope_concepts.hpp"
 
 namespace tenet {
 
@@ -47,8 +47,8 @@ public:
   // Takes ownership of f and arms the guard. If the move into the member
   // throws, the guard cannot exist -- the action runs immediately and the
   // exception propagates, matching the other scope components.
-  explicit scope_success(F f) noexcept(std::is_nothrow_move_constructible_v<F>)
-      try : fn_(std::move(f)), escapes_(std::uncaught_exceptions()) {
+  explicit scope_success(F f) noexcept(std::is_nothrow_move_constructible_v<F>) try
+      : fn_(std::move(f)), escapes_(std::uncaught_exceptions()) {
   } catch (...) {
     f();
   }
@@ -57,8 +57,7 @@ public:
   // uncaught-exception baseline (the escape point moves with the action, not
   // with the source guard's destruction site). The source guard becomes
   // disarmed (its action will never fire), mirroring release().
-  scope_success(scope_success&& other) noexcept(
-      std::is_nothrow_move_constructible_v<F>)
+  scope_success(scope_success&& other) noexcept(std::is_nothrow_move_constructible_v<F>)
       : fn_(std::move(other.fn_)),
         escapes_(other.escapes_),
         active_(std::exchange(other.active_, false)) {}

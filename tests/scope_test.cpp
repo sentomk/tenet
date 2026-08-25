@@ -61,7 +61,7 @@ TEST(ScopeExitTest, MovedFromGuardRunsNothing) {
     EXPECT_EQ(calls, 0);
   }
   EXPECT_EQ(calls, 1);  // second fired once on expiry
-}                       // first is a moved-from guard: destroying it here must not run again
+}  // first is a moved-from guard: destroying it here must not run again
 
 // A callable whose move constructor throws, to exercise the constructor's
 // failure path.

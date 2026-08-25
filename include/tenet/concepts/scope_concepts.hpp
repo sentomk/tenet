@@ -18,8 +18,7 @@ namespace tenet::concepts {
 // arguments through a non-const lvalue (the guard's destructor calls it
 // without arguments).
 template <typename F>
-concept ScopeGuardAction =
-    std::move_constructible<F> && std::invocable<F&>;
+concept ScopeGuardAction = std::move_constructible<F> && std::invocable<F&>;
 
 // A ScopeGuardAction whose invocation is additionally declared noexcept.
 //
@@ -31,7 +30,6 @@ concept ScopeGuardAction =
 // critical code): satisfying it makes the guarantee compiler-checked rather
 // than convention-based.
 template <typename F>
-concept NothrowScopeGuardAction =
-    ScopeGuardAction<F> && std::is_nothrow_invocable_v<F&>;
+concept NothrowScopeGuardAction = ScopeGuardAction<F> && std::is_nothrow_invocable_v<F&>;
 
 }  // namespace tenet::concepts

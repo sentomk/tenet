@@ -8,7 +8,7 @@
 
 // Encoded as (major * 10000 + minor * 100 + patch), e.g. 0.1.0 -> 100.
 #define TENET_VERSION \
-    (TENET_VERSION_MAJOR * 10000 + TENET_VERSION_MINOR * 100 + TENET_VERSION_PATCH)
+  (TENET_VERSION_MAJOR * 10000 + TENET_VERSION_MINOR * 100 + TENET_VERSION_PATCH)
 
 // 1 when used in header-only mode (defined by CMake option TENET_HEADER_ONLY).
 #ifndef TENET_HEADER_ONLY

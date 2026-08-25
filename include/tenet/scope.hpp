@@ -6,7 +6,7 @@
 // faster builds; this header pulls in the whole family.
 
 #include "tenet/concepts/scope_concepts.hpp"
+#include "tenet/scope/defer.hpp"
 #include "tenet/scope/scope_exit.hpp"
 #include "tenet/scope/scope_fail.hpp"
 #include "tenet/scope/scope_success.hpp"
-#include "tenet/scope/defer.hpp"

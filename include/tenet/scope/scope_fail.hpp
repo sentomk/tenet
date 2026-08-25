@@ -3,10 +3,10 @@
 // tenet::scope_fail -- see the class comment below.
 
 #include <exception>
-#include "tenet/concepts/scope_concepts.hpp"
-
 #include <type_traits>
 #include <utility>
+
+#include "tenet/concepts/scope_concepts.hpp"
 
 namespace tenet {
 

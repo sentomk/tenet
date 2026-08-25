@@ -4,7 +4,7 @@
 // builds; this header simply pulls in everything.
 
 #include "tenet/version.hpp"
-#include "tenet/concepts.hpp"
+#include "tenet/concepts/scope_concepts.hpp"
 
 // Components (add as they are implemented):
 #include "tenet/scope.hpp"

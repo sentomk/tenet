@@ -4,18 +4,18 @@
 #include <string>
 #include <type_traits>
 
-#include "tenet/concepts.hpp"
+#include "tenet/concepts/scope_concepts.hpp"
 
 namespace {
 
 TEST(ScopeGuardConceptsTest, NullaryLambdaIsAScopeGuardAction) {
     int x = 0;
-    EXPECT_TRUE(tenet::ScopeGuardAction<decltype([&] { ++x; })>);
+    EXPECT_TRUE(tenet::concepts::ScopeGuardAction<decltype([&] { ++x; })>);
 }
 
 TEST(ScopeGuardConceptsTest, NonInvocableTypeIsNotAScopeGuardAction) {
     // Not callable with no arguments.
-    EXPECT_FALSE(tenet::ScopeGuardAction<int>);
+    EXPECT_FALSE(tenet::concepts::ScopeGuardAction<int>);
 }
 
 TEST(ScopeGuardConceptsTest,
@@ -25,15 +25,15 @@ TEST(ScopeGuardConceptsTest,
         Immovable(Immovable&&) = delete;
         void operator()() {}
     };
-    EXPECT_FALSE(tenet::ScopeGuardAction<Immovable>);
+    EXPECT_FALSE(tenet::concepts::ScopeGuardAction<Immovable>);
 }
 
 TEST(ScopeGuardConceptsTest, PlainLambdaIsNotAutomaticallyNothrow) {
     auto plain = [] {};
     // Even a trivially-empty body: lambdas are never implicitly noexcept,
     // so the stricter concept demands an explicit noexcept.
-    EXPECT_TRUE(tenet::ScopeGuardAction<decltype(plain)>);
-    EXPECT_FALSE(tenet::NothrowScopeGuardAction<decltype(plain)>);
+    EXPECT_TRUE(tenet::concepts::ScopeGuardAction<decltype(plain)>);
+    EXPECT_FALSE(tenet::concepts::NothrowScopeGuardAction<decltype(plain)>);
 }
 
 void safe_fn() noexcept {}
@@ -41,11 +41,11 @@ void safe_fn() noexcept {}
 TEST(ScopeGuardConceptsTest, ExplicitlyNoexceptCallableSatisfiesBoth) {
     void (*fnptr)() noexcept = safe_fn;
     static_assert(noexcept(fnptr()));
-    EXPECT_TRUE(tenet::ScopeGuardAction<decltype(fnptr)>);
-    EXPECT_TRUE(tenet::NothrowScopeGuardAction<decltype(fnptr)>);
+    EXPECT_TRUE(tenet::concepts::ScopeGuardAction<decltype(fnptr)>);
+    EXPECT_TRUE(tenet::concepts::NothrowScopeGuardAction<decltype(fnptr)>);
 
     auto safe = [&]() noexcept { (void)this; };
-    EXPECT_TRUE(tenet::NothrowScopeGuardAction<decltype(safe)>);
+    EXPECT_TRUE(tenet::concepts::NothrowScopeGuardAction<decltype(safe)>);
 }
 
 TEST(ScopeGuardConceptsTest, ThrowingCallableIsOnlyAPlainAction) {
@@ -53,8 +53,8 @@ TEST(ScopeGuardConceptsTest, ThrowingCallableIsOnlyAPlainAction) {
     // the nothrow guarantee.
     auto maybe_throws = [] { throw std::runtime_error("boom"); };
     static_assert(!noexcept(maybe_throws()));
-    EXPECT_TRUE(tenet::ScopeGuardAction<decltype(maybe_throws)>);
-    EXPECT_FALSE(tenet::NothrowScopeGuardAction<decltype(maybe_throws)>);
+    EXPECT_TRUE(tenet::concepts::ScopeGuardAction<decltype(maybe_throws)>);
+    EXPECT_FALSE(tenet::concepts::NothrowScopeGuardAction<decltype(maybe_throws)>);
 }
 
 }  // namespace

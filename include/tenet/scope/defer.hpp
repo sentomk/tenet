@@ -24,7 +24,7 @@
 //   nullary lambda satisfies tenet::ScopeGuardAction, so misuse diagnostics
 //   apply unchanged.
 
-#include "tenet/concepts.hpp"
+#include "tenet/concepts/scope_concepts.hpp"
 #include "tenet/scope/scope_exit.hpp"
 
 #include <type_traits>
@@ -38,7 +38,7 @@ inline constexpr struct {
 } defer;
 
 template <typename F>
-  requires ScopeGuardAction<std::remove_cvref_t<F>>
+  requires concepts::ScopeGuardAction<std::remove_cvref_t<F>>
 [[nodiscard]] constexpr auto operator+(decltype(defer), F&& action) {
   return scope_exit<std::remove_cvref_t<F>>(std::forward<F>(action));
 }

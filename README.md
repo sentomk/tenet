@@ -74,9 +74,10 @@ conditional or the variable name carries meaning (`rollback`, `commit`, ...).
 
 ### Concepts
 
-Requirements of library components are published as reusable concepts in
-`<tenet/concepts.hpp>` (e.g. `tenet::ScopeGuardAction`), and misuses are
-diagnosed with plain-language `static_assert` messages.
+Requirements of library components are published as reusable concepts under
+`include/tenet/concepts/`, grouped by module and namespaced accordingly
+(e.g. `tenet::concepts::ScopeGuardAction` in `<tenet/concepts/scope_concepts.hpp>`).
+Misuses are diagnosed with plain-language `static_assert` messages.
 
 ## Development
 

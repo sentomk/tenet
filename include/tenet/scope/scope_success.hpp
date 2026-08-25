@@ -3,7 +3,7 @@
 // tenet::scope_success -- see the class comment below.
 
 #include <exception>
-#include "tenet/concepts.hpp"
+#include "tenet/concepts/scope_concepts.hpp"
 
 #include <type_traits>
 #include <utility>
@@ -37,7 +37,7 @@ namespace tenet {
 template <typename F>
 class scope_success {
   // Friendly misuse diagnostics -- see tenet::scope_exit for rationale.
-  static_assert(ScopeGuardAction<F>,
+  static_assert(concepts::ScopeGuardAction<F>,
                 "tenet::scope_success<F>: F must be a move-constructible "
                 "callable invocable with no arguments, e.g. a nullary lambda "
                 "'[&] { ... }' or 'void (*)()'. The guard stores the callable "

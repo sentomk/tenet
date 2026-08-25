@@ -1,18 +1,16 @@
 #pragma once
 
-// Concepts for tenet's components.
+// Requirements of the scope guard components, published as reusable
+// concepts. These are public API: user code can reference them for
+// documentation purposes or in its own generic constraints, e.g.
 //
-// Every reusable concept published by a tenet component lives here, so
-// "where is that constraint defined?" always has the same answer. The
-// concepts are public API: user code can reference them for documentation
-// purposes or in its own generic constraints, e.g.
-//
-//   template <tenet::ScopeGuardAction F> void install_cleanup(F&& action);
+//   template <tenet::concepts::ScopeGuardAction F>
+//   void install_cleanup(F&& action);
 
 #include <concepts>
 #include <type_traits>
 
-namespace tenet {
+namespace tenet::concepts {
 
 // A callable suitable for tenet::scope_exit / tenet::scope_fail /
 // tenet::scope_success: it must be move-constructible (the guard stores it by
@@ -36,4 +34,4 @@ template <typename F>
 concept NothrowScopeGuardAction =
     ScopeGuardAction<F> && std::is_nothrow_invocable_v<F&>;
 
-}  // namespace tenet
+}  // namespace tenet::concepts

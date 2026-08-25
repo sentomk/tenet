@@ -2,7 +2,7 @@
 
 // tenet::scope_exit -- see the class comment below.
 
-#include "tenet/concepts.hpp"
+#include "tenet/concepts/scope_concepts.hpp"
 
 #include <type_traits>
 #include <utility>
@@ -35,8 +35,8 @@ class scope_exit {
   // Friendly misuse diagnostics: fail fast in the class body with plain
   // language instead of deep template instantiation errors at the call site
   // or inside the destructor. The requirement itself is the public concept
-  // tenet::ScopeGuardAction (see tenet/concepts.hpp).
-  static_assert(ScopeGuardAction<F>,
+  // tenet::ScopeGuardAction (see tenet/concepts/scope_concepts.hpp).
+  static_assert(concepts::ScopeGuardAction<F>,
                 "tenet::scope_exit<F>: F must be a move-constructible "
                 "callable invocable with no arguments, e.g. a nullary lambda "
                 "'[&] { ... }' or 'void (*)()'. The guard stores the callable "

@@ -9,3 +9,4 @@
 #include "tenet/scope/scope_exit.hpp"
 #include "tenet/scope/scope_fail.hpp"
 #include "tenet/scope/scope_success.hpp"
+#include "tenet/scope/defer.hpp"

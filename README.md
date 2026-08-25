@@ -20,9 +20,63 @@ target_link_libraries(your_target PRIVATE tenet::tenet)
 #include <tenet/tenet.hpp>
 ```
 
+(Angle brackets here reflect consuming an installed copy of the library;
+code inside the tenet repo itself uses quoted includes -- see
+[Style](#style).)
+
 ### Compiled mode
 
 Configure with `-DTENET_HEADER_ONLY=OFF` and link `tenet::tenet` as usual.
+
+## Components
+
+### Scope guards
+
+Cleanup actions that run automatically when a scope exits:
+
+| Component | Runs when |
+|---|---|
+| `tenet::scope_exit` | always (normal exit, early return, exception) |
+| `tenet::scope_fail` | only if an exception is unwinding past the scope |
+| `tenet::scope_success` | only on normal exit |
+
+```cpp
+#include <tenet/scope.hpp>
+
+void transfer(Account& from, Account& to, int amount) {
+    auto tx = db.begin();
+    tenet::scope_fail rollback{[&] { tx.rollback(); }};  // failure safety net
+    debit(from, amount);
+    credit(to, amount);
+    tx.commit();   // reached only if nothing threw
+}
+```
+
+Guards are move-only; `release()` disarms a guard and hands back the action.
+The stored callable must not throw.
+
+### TENET_DEFER
+
+Go-style defer for unconditional, anonymous cleanup -- sugar over
+`scope_exit`, so the action sits right where you think of it and no guard
+variable needs a name:
+
+```cpp
+#include <tenet/scope/defer.hpp>
+
+FILE* f = fopen("data.txt", "r");
+TENET_DEFER { fclose(f); };
+TENET_DEFER { log("leaving scope"); };   // multiple defers run in LIFO order
+```
+
+Use a named `scope_fail`/`scope_success` instead when the cleanup is
+conditional or the variable name carries meaning (`rollback`, `commit`, ...).
+
+### Concepts
+
+Requirements of library components are published as reusable concepts in
+`<tenet/concepts.hpp>` (e.g. `tenet::ScopeGuardAction`), and misuses are
+diagnosed with plain-language `static_assert` messages.
 
 ## Development
 

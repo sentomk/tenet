@@ -63,6 +63,23 @@ TEST(ScopeSuccessTest, MoveTransfersOwnership) {
     EXPECT_EQ(log, std::vector<int>{1});
 }
 
+TEST(ScopeSuccessTest, ExplicitMoveKeepsExceptionBaseline) {
+    // Mirror of the scope_fail test: forcing the move constructor must keep
+    // the uncaught-exception snapshot. A guard created during handling that
+    // exits the catch block without a new escaping exception must fire.
+    bool ran = false;
+    int caught = 0;
+    try {
+        throw std::runtime_error("boom");
+    } catch (const std::runtime_error&) {
+        auto src = tenet::scope_success{[&] { ran = true; }};
+        auto dst = std::move(src);  // NOLINT: exercised, not an elision
+        ++caught;
+    }
+    EXPECT_EQ(caught, 1);
+    EXPECT_TRUE(ran);
+}
+
 // Compile-time contract checks shared by the scope family. Note: these
 // instantiate the class template, so F must satisfy its requirements too.
 static_assert(

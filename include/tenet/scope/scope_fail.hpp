@@ -50,10 +50,14 @@ public:
     f();
   }
 
-  // Transfers the pending action from another guard. The source guard becomes
+  // Transfers the pending action from another guard, including the
+  // uncaught-exception baseline (the escape point moves with the action, not
+  // with the source guard's destruction site). The source guard becomes
   // disarmed (its action will never fire), mirroring release().
   scope_fail(scope_fail&& other) noexcept(std::is_nothrow_move_constructible_v<F>)
-      : fn_(std::move(other.fn_)), active_(std::exchange(other.active_, false)) {}
+      : fn_(std::move(other.fn_)),
+        escapes_(other.escapes_),
+        active_(std::exchange(other.active_, false)) {}
 
   // Copying would allow the same cleanup to run twice.
   scope_fail(const scope_fail&) = delete;

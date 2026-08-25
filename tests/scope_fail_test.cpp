@@ -64,6 +64,21 @@ TEST(ScopeFailTest, MoveTransfersOwnership) {
     EXPECT_TRUE(ran);
 }
 
+TEST(ScopeFailTest, ExplicitMoveKeepsExceptionBaseline) {
+    // Force the move constructor (copy elision would hide it): create the
+    // guard while an exception is active, move it, then exit normally. The
+    // baseline snapshot must travel with the move -- an uninitialized one
+    // would misclassify this normal exit as failure.
+    bool ran = false;
+    try {
+        throw std::runtime_error("boom");
+    } catch (const std::runtime_error&) {
+        auto src = tenet::scope_fail{[&] { ran = true; }};
+        auto dst = std::move(src);  // NOLINT: exercised, not an elision
+    }
+    EXPECT_FALSE(ran);
+}
+
 // Compile-time contract checks shared by the scope family. Note: these
 // instantiate the class template, so F must satisfy its requirements too.
 static_assert(!std::is_copy_constructible_v<tenet::scope_fail<void (*)()>>);

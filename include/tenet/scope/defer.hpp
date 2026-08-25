@@ -2,8 +2,6 @@
 
 // tenet::TENET_DEFER -- see the macro comment below.
 
-#include "tenet/scope/scope_exit.hpp"
-
 // Registers a cleanup action that runs when the enclosing scope exits --
 // Go-style defer, built on tenet::scope_exit.
 //

@@ -18,6 +18,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check formatting
+        shell: bash
+        run: |
+          # Pinned so formatting is judged by one clang-format version
+          # everywhere; bump together with any local .clang-format reformat.
+          pip install clang-format==20.1.5
+          find include src tests \( -name '*.hpp' -o -name '*.cpp' \) \
+            | xargs clang-format --dry-run --Werror
+
       - name: Check include style
         shell: bash
         run: |

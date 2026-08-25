@@ -97,8 +97,10 @@ Include style (enforced by CI):
 #include "gtest/gtest.h"    // third-party headers: quotes
 ```
 
-Note that clang-format cannot rewrite quote styles; the CI check is the
-authority here.
+Note that clang-format cannot rewrite quote styles; the include-style CI
+check is the authority there. Formatting itself is also enforced: CI runs
+`clang-format --dry-run --Werror` over `include/`, `src/`, and `tests/`
+before building.
 
 ## License
 

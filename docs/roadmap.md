@@ -7,7 +7,13 @@ small, dependency-free, C++20, correctness-first with friendly diagnostics.
 
 ## Near term
 
-### unique_resource
+### ~~unique_resource~~ shipped
+
+Implemented (see `include/tenet/resource/unique_resource.hpp`,
+`docs/design/unique_resource.md`): `(acquire, release)` pair wrapped into a
+move-only RAII handle, with `make_unique_resource_checked` for
+sentinel-based acquirers and the scope family's exception baseline. Design
+notes kept below for the record:
 
 Modern take on P0053 (`std::experimental::unique_resource`): wrap an
 `(acquire, release)` pair into an RAII handle.

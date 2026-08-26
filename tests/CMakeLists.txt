@@ -22,6 +22,7 @@ add_executable(tenet_tests
     scope_success_test.cpp
     defer_test.cpp
     scope_concepts_test.cpp
+    unique_resource_test.cpp
 )
 
 target_link_libraries(tenet_tests PRIVATE

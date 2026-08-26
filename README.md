@@ -72,6 +72,30 @@ TENET_DEFER { log("leaving scope"); };   // multiple defers run in LIFO order
 Use a named `scope_fail`/`scope_success` instead when the cleanup is
 conditional or the variable name carries meaning (`rollback`, `commit`, ...).
 
+### unique_resource
+
+RAII handle for a *named* resource through an `(acquire, release)` pair --
+the sibling of the scope-guard family (defer for anonymous cleanup,
+unique_resource for named resources):
+
+```cpp
+#include <tenet/resource/unique_resource.hpp>
+
+auto fd = tenet::unique_resource{open(path, flags), close};
+read(fd.get(), buf, n);       // closed automatically at scope exit
+
+// For acquirers that return an invalid sentinel instead of throwing:
+auto f = tenet::make_unique_resource_checked(
+    fopen(path, "r"), static_cast<FILE*>(nullptr), &fclose);
+```
+
+Guards are move-only; `release()` disarms and returns the resource,
+`reset()` deletes now or swaps in a new resource, `get()`/`get_deleter()`
+expose the stored pair, and `*`/`->` work for pointer-shaped handles.
+If moving the handle or deleter throws, the source's resource is still
+deleted -- it never leaks. The deleter must not throw (an escaping
+exception reaches `std::terminate`).
+
 ### Concepts
 
 Requirements of library components are published as reusable concepts under

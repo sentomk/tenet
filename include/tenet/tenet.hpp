@@ -7,5 +7,7 @@
 #include "tenet/version.hpp"
 
 // Components (add as they are implemented):
+#include "tenet/concepts/resource_concepts.hpp"
+#include "tenet/resource/unique_resource.hpp"
 #include "tenet/scope.hpp"
 // #include "tenet/expected.hpp"

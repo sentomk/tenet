@@ -10,8 +10,9 @@ small, dependency-free, C++20, correctness-first with friendly diagnostics.
 ### ~~unique_resource~~ shipped
 
 Implemented (see `include/tenet/resource/unique_resource.hpp`,
-`docs/design/unique_resource.md`): `(acquire, release)` pair wrapped into a
-move-only RAII handle, with `make_unique_resource_checked` for
+`docs/design/resource.md#unique_resource`):
+`(acquire, release)` pair wrapped into a move-only RAII handle, with
+`make_unique_resource_checked` for
 sentinel-based acquirers and the scope family's exception baseline. Design
 notes kept below for the record:
 

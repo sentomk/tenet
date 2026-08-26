@@ -105,7 +105,7 @@ public:
   // then takes over other's. Only available when R and D are nothrow
   // move-assignable -- after deleting our old resource, a throwing member
   // move cannot be rolled back safely, so we don't offer the operation we
-  // can't specify crisply (see docs/design/unique_resource.md).
+  // can't specify crisply (see docs/design/resource.md#unique_resource).
   unique_resource& operator=(unique_resource&& other) noexcept(
       std::is_nothrow_move_assignable_v<R> && std::is_nothrow_move_assignable_v<D> &&
       noexcept(std::declval<D&>()(std::declval<R&>())))

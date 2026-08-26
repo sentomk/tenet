@@ -1,10 +1,17 @@
-# Design note: unique_resource
+# Design note: resource
 
-Status: accepted for implementation (v1)
+The resource module contains ownership types for named resources whose
+lifetime is represented by an acquire/release pair. Each ownership type is a
+separate chapter so future resource policies can share one module-level design
+record without being folded into `unique_resource`.
+
+## `unique_resource`
+
+Status: implemented (v1)
 Roadmap entry: near term -- unique_resource
 References: P0053 (`std::experimental::unique_resource`), C++20
 
-## Problem
+### Problem
 
 Scope guards attach anonymous cleanup to a scope. Named resources need more:
 a handle that owns one resource for its whole lifetime, can be queried,
@@ -15,7 +22,7 @@ LWG review); every project rolls its own fd/handle wrappers instead.
 Goal: `tenet::unique_resource{open(path), close}` -- acquire/release pair
 wrapped into a move-only RAII handle.
 
-## Non-goals (v1)
+### Non-goals (v1)
 
 - No shared ownership (that is `shared_ptr` territory, or a later
   `shared_resource` if ever needed).
@@ -24,7 +31,7 @@ wrapped into a move-only RAII handle.
   has unclear utility and complicates semantics).
 - No allocator support; `D` is any callable, not necessarily stateless.
 
-## API surface
+### API surface
 
 ```cpp
 template <typename R, typename D>
@@ -80,7 +87,7 @@ Semantics decisions, aligned with the scope-guard family:
   non-pointer `R` so integer handles don't get surprising dereference
   syntax.
 
-## Concepts
+### Concepts
 
 Published next to the scope-guard concepts, same rationale (misuse
 diagnostics in plain language, reusable constraints):
@@ -94,13 +101,13 @@ diagnostics in plain language, reusable constraints):
 Violating the requirements fails fast in the class body with a
 `static_assert` naming the concept, not deep instantiation spam.
 
-## Layout
+### Layout
 
 - `include/tenet/resource/unique_resource.hpp` -- component header.
 - `include/tenet/concepts/resource_concepts.hpp` -- concepts above.
 - `tests/unique_resource_test.cpp` -- gtest suite.
 
-## Testing focus
+### Testing focus
 
 Lifetime (destroy/release/move/reset each fire exactly once), exception
 baseline on the throwing move path, checked factory with invalid sentinels,
